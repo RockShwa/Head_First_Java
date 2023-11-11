@@ -3,6 +3,8 @@
 - Make sure to save changes with ctrl s
 
 ## Terminal Commands:
+- run compiled binaries: navigate to bin folder, java <class with main()>
+
 - ls (list) <- lists directory (folder) contents
 
 - ls -l <- lists more details about directory contents
