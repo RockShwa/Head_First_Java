@@ -3,9 +3,14 @@ import java.util.*;
 public class StartUp 
 {
     private ArrayList<String> locationCells;
-    private int numOfHits = 0;
+    private String name;
     
-    public String checkYourself(int guess)
+    public void setName(String n)
+    {
+        name = n;
+    }
+
+    public String checkYourself(String guess)
     {
         String result = "miss";
         int index = locationCells.indexOf(guess);
@@ -17,6 +22,7 @@ public class StartUp
             if (locationCells.isEmpty())
             {
                 result = "kill";
+                System.out.println("Ouch! You sunk " + name + " : (" );
             }
             else
             {

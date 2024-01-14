@@ -1,6 +1,9 @@
 # Notes for Using the Terminal and using Git:
 
 - Make sure to save changes with ctrl s
+- Compile with javac -d bin ./src/*.java (do EVERY time you make a change)
+- Open up wsl terminal to run code, so you don't have to switch back and forth
+- navigate to bin folder and do java <class with main method>
 
 ## Terminal Commands:
 - run compiled binaries: navigate to bin folder, java <class with main()>

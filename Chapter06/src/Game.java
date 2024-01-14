@@ -1,47 +1,85 @@
 import java.util.*;
 
-// OKAY HOMIE: we got this issue, you enter a correct
-// cell multiple times, and it ocunts it as a kill. I
-// need to find a way to check and make sure this is
-// a unique guess... but how do I do that?
-// Could make a new array that hold previous guesses
-// and then iterate through that each time and check
-// if the new guess is unique or not...
-
 public class Game 
 {
-    public static void main(String[] args) 
+    private GameHelper helper = new GameHelper();
+    private ArrayList<StartUp> startups = new ArrayList<StartUp>();
+    private int numOfGuesses = 0;
+    
+    private void setUpGame()
     {
-        // Scanner scan = new Scanner(System.in);
-        boolean isAlive = true;
-        int numOfGuesses = 0;
-        GameHelper helper = new GameHelper();
-        
-        StartUp dot = new StartUp();
-        
-        // Compute a random num between 0 and
-        // 4 that will be the starting cell position
-        int startCell = (int) (Math.random() * 5);
-        
-        int[] dotLoc = {startCell, startCell + 1, startCell + 2};
-        
-        // set object location to this array with cell locs
-        dot.setLocationCells(dotLoc);
-        
-        while (isAlive)
+        StartUp one = new StartUp();
+        one.setName("poniez");
+        StartUp two = new StartUp();
+        two.setName("hacqi");
+        StartUp three = new StartUp();
+        three.setName("cabista");
+        startups.add(one);
+        startups.add(two);
+        startups.add(three);
+
+        System.out.println("Hello user! Your goal is to sink all of the Startups: poniez, hacqi, and cabista.");
+        System.out.println("Try to sink all three in the least number of guesses");
+
+        for (StartUp startup : startups)
         {
-            // System.out.println("Enter a guess: ");
-            // String userGuess = scan.nextLine();
-            int userGuess = helper.getUserInput("Enter a number");
-            
-            String result = dot.checkYourself(userGuess);
-            numOfGuesses ++;
-            
-            if (result.equals("kill"))
+            ArrayList<String> newLocation = helper.placeStartup(3);
+            startup.setLocationCells(newLocation);
+        }
+    }
+
+    private void startPlaying()
+    {
+        while(!startups.isEmpty())
+        {
+            String userGuess = helper.getUserInput("Enter a guess");
+            checkUserGuess(userGuess);
+        }
+        finishGame();
+    }
+
+    private void checkUserGuess(String userGuess)
+    {
+        numOfGuesses++;
+        String result = "miss";
+
+        for(StartUp startupToTest : startups)
+        {
+            result = startupToTest.checkYourself(userGuess);
+
+            if(result.equals("hit"))
             {
-                isAlive = false;
-                System.out.println("You took " + numOfGuesses + " guesses.");
+                break;
+            }
+            if(result.equals("kill"))
+            {
+                startups.remove(startupToTest);
+                break;
             }
         }
-    } 
+
+        System.out.println(result);
+    }
+
+    private void finishGame()
+    {
+        System.out.println("All startups are dead! Your stock is now worthless");
+        if (numOfGuesses <= 18)
+        {
+            System.out.println("It only took you " + numOfGuesses + " guesses.");
+            System.out.println("You got out before your options sank.");
+        }
+        else
+        {
+            System.out.println("Took you long enough. " + numOfGuesses + " guesses.");
+            System.out.println("Fish are dancing with your options");
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        Game game = new Game();
+        game.setUpGame();
+        game.startPlaying();
+    }
 }
