@@ -32,8 +32,8 @@
 import static java.lang.Math.*;
 import static java.lang.System.out;
 - Allows you to do this:
-out.println("sqrt " + sqrt(2.0));
-out.println("tan " + tan(60));
+- out.println("sqrt " + sqrt(2.0));
+- out.println("tan " + tan(60));
 - Can be really confusing, not recommended :D
 
 ## Static Final 
