@@ -10,6 +10,7 @@ public class MockSongs {
         songs.add(new SongV2("$10", "hitchhiker", 140));
 
         songs.add(new SongV2("havana", "cabello", 105));
+        songs.add(new SongV2("$10", "hitchhiker", 140));
         songs.add(new SongV2("Cassidy", "grateful dead", 158));
         songs.add(new SongV2("50 Ways", "simon", 102));
         return songs;

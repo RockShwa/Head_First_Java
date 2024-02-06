@@ -32,3 +32,41 @@
         - public <T extends Animal> void takeThing(ArrayList<T> list) //We can use <T> because we declared T at the start of the method decleration; this just says T can be any kind of Animal
 3) Declaring (and invoking) methods that take generic types
     - Basically the same idea as #2
+
+## Comparators
+- Invoking the Collections.sort(List list) method means the list element's compareTo() method determines the order. The elements in the list MUST implement to the Comparable interface.
+- Invoking List.sort(Comparator c) or Collections.sort(List list, Comparator c) means the Comparator's compare() method will be used 
+    - means that elements in the list do NOT need to implement to Comparator interface, but if they do, the list element's compareTo() method will NOT be called
+- A good approach is to handle all of the sorting definitions in classes that implement Comparator
+
+## Lambdas
+- Leverages what the compiler can infer
+- Lambdas implement a specific method, without having to delare the class or the method, only the details about what goes into that method body
+- Look at Lambda Example in src
+- Single Abstract Method (SAM) = an interface with only one abstract method to implement
+    - Also known as a Functional Interface
+- If an interface only has one method that needs to be implemented, that interface can be implemented as a lambda expression
+
+## Set
+- When uniqueness matters, Collections that DO NOT allow duplicates
+- You can never have more than one element referencing the same object (or more than one element referencing two objects considered equal)
+- HashSet (implements Set) compares each element's hashcode to decide the duplicates 
+### Tree Set
+
+## Map
+- When finding something by key matters 
+- Duplicate values are okay, but no duplicate keys
+- A key can be any object
+- Do not extend Collections interface, but still considered part of the Collections API/Framework
+
+## Object/Reference Equality
+- Reference Equality
+    - Two references, one object on the heap
+    - If you want to know if two references are really refering to the same object, use the == operator. If both references point the same object, the bits will be identical
+- Object Equality
+    - Two references, two objects on the heap, but the objects are considered meaningfully equivlent 
+    - If you want to treat two different objects as equal, you must override both the **hashCode()** and **equals()** method inherited from class Object
+    - Override the hashCode() method by giving both objects the same hashcode, and override the equals() method so that when one object is passed the other, it always returns true
+- Objects with the same hashcode do not have to be treated as equal
+- If you override equals(), you must override hashcode()
+

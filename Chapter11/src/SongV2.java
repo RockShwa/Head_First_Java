@@ -8,6 +8,17 @@ public class SongV2 implements Comparable<SongV2> {
         return title.compareTo(s.getTitle());
     }
 
+    @Override
+    public boolean equals(Object aSong) {
+        SongV2 other = (SongV2) aSong;
+        return title.equals(other.getTitle()); //Objects will be equal if titles are the same
+    }
+
+    @Override
+    public int hashCode() {
+        return title.hashCode(); //String has an overriden hashCode() method 
+    }
+
     public SongV2 (String title, String artist, int bpm) {
         this.title = title;
         this.artist = artist;
