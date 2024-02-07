@@ -26,6 +26,11 @@ public class JukeBox1 {
 
         Set<SongV2> songSet = new HashSet<>(songList);
         System.out.println(songSet);
+
+        Set<SongV2> songSet2 = new TreeSet<>(songList);
+        // This is with a lambda
+        // Set<SongV2> songSet2 = new TreeSet<>((o1, o2) -> o1.getBpm() - o2.getBpm());
+        System.out.println(songSet2); //uses SongV2's compareTo() method to sort
     }
     public static void main(String[] args) {
         new JukeBox1().go();
