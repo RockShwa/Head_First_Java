@@ -24,7 +24,7 @@
 
 ### Polymorphism + Generics
 - Wildcards: Animal example, won't let you add anything to the list, solving the problem of adding a Cat to a Dog only list, good when you don't care what type is being passed to the method
-~~~
+~~~java
     public void takeAnimals(List<? extends Animal> animals) {
         for (Animal a : animals) {
             a.eat();
@@ -32,7 +32,7 @@
     }
 ~~~
 - Can also replace ? with <T> so you can use <T> in your code as a reference to the type passed to the method. This also ensures that whatever you put in is what you will get out
-~~~
+~~~java
     public <T extends Animal> List<T> takeAnimals(List<T> list) {
         for (Animal a : animals) {
             a.eat();
