@@ -44,5 +44,60 @@
     ~~~
 - Lambdas tell compiler WHAT you want it to do, not HOW
 - -> = "do this"
-- Lambdas expressions are objects
+- Lambdas expressions are objects, and you run them by calling their Single Abstract Method (SAM), they implement a Functional Interface
+    - If you want method to accept a lambda expression, you need to have a parameter whose type is a functional interface, the SAM is called when we run the lambda
+    ~~~java
+    void forEach(someFunctionalInterface lambda) {
+        for (Element element : list) {
+            lambda.singleAbstractMethodName(element);
+        }
+    }
+    ~~~
+- Anatomy of a Lambda Expression:
+    ~~~ java
+    (String s1, String s2) -> return s1.compareToIgnoreCase(s2);
+    ~~~
+    - Number and types of parameters to lambda expression are determined by the Functional Interface it implements
+    - Types of objects being compared not required (in this case s1 & s2)
+    - Basically a shortened method!
+- The type of a lambda is its interface
+- You can assign a lambda expression to a variable, like any other object, which helps us see its type and if we can pass it to a method:
+    ~~~ java
+    Consumer<String> consumer = str -> System.out.println(str);
+    Runnable runnable = () -> System.out.println("Hello!");
+    ~~~
 
+### Rules/Exceptions of Lambdas
+- A lambda could be more than one line: its like any other method, it must be surrounded by curly brakets, have a return statement, and each line must end in a semicolon
+    ~~~ java
+    (str1, str2) -> {
+        int 11 = str1.length();
+        int 12 = str2.length();
+        return 12-11;
+        // Results in the collection being sorted in descending order
+    }
+    ~~~
+- Single-line lambdas don't need ceremony: much of their syntax can be shortened. Choose between single and multi line lambdas based off clarity
+    ~~~ java
+    (str1, str2) -> str2.length() - str1.length()
+    // No semicolon, brakets, or return statement
+    ~~~
+- A lambda might no return anything: if the return type on the Functional Interface is declared as void, the lamba just executes stuff and does not have to return something
+    ~~~ java
+    str -> { // No need for parenthesis if it's a single parameter
+        String output = "str = " + str;
+        System.out.println(output);
+    }
+    ~~~
+- A lambda might have zero, one, or many parameters: dependent on the number of parameters the Functional Interface takes; don't always have to add types of parameters, but sometimes do so compiler can know and for clarity
+    ~~~ java
+    () -> System.out.println("Hello!") // Uses Runnable Interface, void run() method
+    str -> System.out.println(str) // Uses interface Consumer<T>, void accept(T t)
+    (str1, str2) -> str1.compareToIgnoreCase(str2) // Uses interface Comparator<T>, int compare (T o1, o2)
+    ~~~
+## Functional Interface
+- An interface with a Single Abstract Method (SAM)
+- Sometimes denoted with @FunctionalInterface, but not always, especially in older code
+- Interfaces in Java 8 can also contain static and default methods that don't have to be overriden, anything else in an interface MUST be overriden when implemented
+    - Default methods: like a standard method in an abstract class, have a body, and are inherited by the subclasses
+- Don't be misled by methods inherited by Object either :D

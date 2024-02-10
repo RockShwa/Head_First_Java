@@ -98,7 +98,7 @@
 - Objects with the same hashcode do not have to be treated as equal
 - If you override equals(), you must override hashcode()
 
-## Convience Factory Methods for Collections
+## Convience Factory Methods for Collections (ONLY JAVA 9)
 - Allow you to easily create a List, Set, or Map that's been prefilled with known data
 - The resulting collections CAN NOT be changed (can't add to them or alter values or sort the values)
 - The resulting collections are NOT the standard Collections we've seen (You can rely on them to behave according to the interface, but not specifc implementation of List, Set, or Map)
