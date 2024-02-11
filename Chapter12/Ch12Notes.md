@@ -16,6 +16,9 @@
     - long count() - Returns the number of elements in this stream
     - <R,A> R collect(Collector<? super T,A,R> collector) - Performs a mutable reduction operation on the elements on this stream a Collector; this basically just gets the output of the stream pipeline in a List/Collection
     - Optional<T> findFirst() - Returns an Optional desctibing the first element of this stream, or an empty Optional if stream is empty
+- map() operations states how to map from one type to another type
+    - Takes a Function interface, which takes something of one type and returns something of a different type
+- distinct(), stops any duplicate elements from getting through the stream
 
 ### Using Streams
 - A stream does NOT contain the elements in the collection, its like a set of instructions for the operations to perform on the Collection data
@@ -30,6 +33,7 @@
     - Collectors is a class that has static methods that provide different implementations of Collector
     - The method overall takes a Collector, the recipe for how to put together the results. In this case, its using a predefined Collector that puts the results in a list
 - A stream does NOT change the original collection, even after terminal command, it creates a modified copy
+
 
 ### Guidelines for Working with Streams
 1) You need at least the first and last pieces to create a stream pipeline (the stream() and terminal operation)
@@ -66,6 +70,11 @@
     Consumer<String> consumer = str -> System.out.println(str);
     Runnable runnable = () -> System.out.println("Hello!");
     ~~~
+- Sometimes, you don't even need a lambda expression, you can use a method reference instead
+    - Function<Song, String> getGenre = Song::getGenre;
+    - This basically says the input will be a song, the output will be a String; the :: is the method reference, which tells the compiler where the method is at (so it can call it and get the result you want)
+    - Can make code easier to understand
+    - We can use a lot of static helper methods in the Functional Interfaces to use method references on
 
 ### Rules/Exceptions of Lambdas
 - A lambda could be more than one line: its like any other method, it must be surrounded by curly brakets, have a return statement, and each line must end in a semicolon
@@ -95,9 +104,25 @@
     str -> System.out.println(str) // Uses interface Consumer<T>, void accept(T t)
     (str1, str2) -> str1.compareToIgnoreCase(str2) // Uses interface Comparator<T>, int compare (T o1, o2)
     ~~~
+
 ## Functional Interface
 - An interface with a Single Abstract Method (SAM)
 - Sometimes denoted with @FunctionalInterface, but not always, especially in older code
 - Interfaces in Java 8 can also contain static and default methods that don't have to be overriden, anything else in an interface MUST be overriden when implemented
     - Default methods: like a standard method in an abstract class, have a body, and are inherited by the subclasses
 - Don't be misled by methods inherited by Object either :D
+
+## Collecting Results of a Stream
+- Collectors.toList() & Collectors.toUnmodifiableList():
+    - toUnmodifiableList is java 10 and up
+    - Basically puts results of the stream into a List
+- Collectors.toSet() & Collectors.toUnmodifiableSet():
+    - toUnmodifiableSet is java 10 and up
+    - Use this to put the results into a Set, which by definition does NOT allow duplicates
+- Collectors.toMap() & Collectors.toUnmodifiableMap():
+    - toUnmodifiableMap is java 10 and up
+    - Collects stream into a Map of key/value pairs, need to provide some functions to tell the collector what will be the key and what will be the value
+- Collectors.joining
+    - Creates a String result from a stream, joins all elements in the stream together into one large String
+    - Can optionally define a delimeter, which seperates each element by a character
+    - Useful if you turn your stream into a String of Comma Seperated Values (CSV)

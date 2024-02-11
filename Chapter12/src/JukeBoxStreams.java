@@ -22,6 +22,15 @@ public class JukeBoxStreams {
                                     .filter(song -> song.getYear() > 1995)
                                     .collect(Collectors.toList());
         System.out.println(yearSongs);
+
+        // Goal #2: Turn the song elements in the Stream into genre (String) elements
+        List<String> genres = songs.stream()
+        // By calling getGenre on the song, the stream after this point will be made of Strings
+                                   .map(song -> song.getGenre()) 
+                                   .distinct()
+                                   .collect(Collectors.toList()); //Puts results into a List
+        System.out.println(genres);
+    
         
     }
 }
