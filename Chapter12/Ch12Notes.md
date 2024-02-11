@@ -19,6 +19,23 @@
 - map() operations states how to map from one type to another type
     - Takes a Function interface, which takes something of one type and returns something of a different type
 - distinct(), stops any duplicate elements from getting through the stream
+- anyMatch(Predicate), allMatch(Predicate), noneMatch(Predicate) - Pretty self-explanatory, returns a boolean value:
+    - .anyMatch(s -> s.getGenre().equals("R&B"));
+- long count() - find out number of elements in stream 
+### Optional (the class)
+- Optional<T> findAny(), Optional<T> findFirst(), Optional<T> max(Comparator c), Optional<T> min(Comparator c), Optional<T> reduce(BinaryOperator a)
+- Return an Optional value looking for a specific thing in the stream
+- Optional: may return something, maybe not; it's a wrapper class that wraps the result so you can decide what to do next
+- Optional results can be empty, if you don't check first if they're empty, you'll get an Exception
+~~~ java
+Optional<IceCream> optional = getIceCream("Strawberry");
+if (optional.isPresent()) {
+    IceCream ice = optional.get();
+} 
+else {
+    System.out.println("No icecream for you!");
+}
+~~~
 
 ### Using Streams
 - A stream does NOT contain the elements in the collection, its like a set of instructions for the operations to perform on the Collection data
@@ -33,7 +50,6 @@
     - Collectors is a class that has static methods that provide different implementations of Collector
     - The method overall takes a Collector, the recipe for how to put together the results. In this case, its using a predefined Collector that puts the results in a list
 - A stream does NOT change the original collection, even after terminal command, it creates a modified copy
-
 
 ### Guidelines for Working with Streams
 1) You need at least the first and last pieces to create a stream pipeline (the stream() and terminal operation)
