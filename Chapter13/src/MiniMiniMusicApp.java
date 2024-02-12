@@ -1,8 +1,6 @@
 import javax.sound.midi.*;
 import static javax.sound.midi.ShortMessage.*; // use constants in ShortMessage
 
-// NOTE: This does not work, getting a Runtime Error from Iced-tea sound that I don't have time to fix right now
-
 public class MiniMiniMusicApp {
     public static void main(String[] args) {
         MiniMiniMusicApp mini = new MiniMiniMusicApp();

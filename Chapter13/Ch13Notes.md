@@ -1,6 +1,7 @@
 # Risky Behavior - Exception Handling
 - When things go WRONG, and the compiler acts like a 2 year old, we need a way to handle risky situations
 - Most of the notes in this section will be closely tied to the MIDI Music Player Project
+- **YOU CAN NOT USE LINUX FOR MIDI OR ANYTHING WITH JAVASOUND**
 
 ## JavaSound
 - A set of classes/interfaces, 2 parts: MIDI (Musical Instrument Digital Interface) and Sampled
