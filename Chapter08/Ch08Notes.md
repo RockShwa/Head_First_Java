@@ -23,7 +23,7 @@
     - d.roam() //Dog essence returned!
 - keyword super: lets you invoke a superclass version of an overriden method from within the subclass
 
-# Interfaces
+## Interfaces
 - keyword interface: a 100% abstract class 
 - Side-steps Deadly Diamond of Death (multiple inheritance) by making all the methods abstract so JVM isn't confused about which inherited method to use
 - Any subclass of the interface HAS to implement the methods of that interface
@@ -31,7 +31,7 @@
 - Classes from different inheritance trees can implement the same interface, and the same class can implement multiple imterfaces
 - Child classes implement interfaces of parent classes
 
-# How to Know When to make a Class, a Subclass, an Abstract Class, or an Interface
+## How to Know When to make a Class, a Subclass, an Abstract Class, or an Interface
 - Class: make a class that dosen't extend anything (Other than Object) when your new class dosen't pass the IS-A test for any other type
 - Subclass: extend a class/make a subclass only when you need a more specific version of a class and need to override or add new behaviors
 - Abstract Class: make when you want to define a template for a group of subclasses, and yiou have at least some implementation code that all subclasses could use. Make only when you want to gaurantee that nobody can make objects of that type

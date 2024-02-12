@@ -1,4 +1,4 @@
-# Notes for Chapter 6: Using the Java Library
+# Using the Java Library
 
 ## ArrayList
 

@@ -4,7 +4,7 @@ public class MusicTest1 {
     public void play() {
         try {
             Sequencer sequencer = MidiSystem.getSequencer();
-            System.out.println("Successfully got a sequencer");
+            System.out.println("Successfully got sequencer: " + sequencer);
         }
         catch (MidiUnavailableException e) {
             System.out.println("Bummer");
