@@ -31,3 +31,51 @@
     - paintComponent() is where all the graphics code goes, anytime the JVM thinks the display needs refreshing, it will call this method. You NEVER call this method directly yourself, the system handles it for you
     - paintComponent() takes a Graphics object parameter, usually called g. g is actually a reference to a Graphics2D object (Graphics2D can do more); if you need to use a Graphics2D method, you have to cast it as a Graphics2D object first because the parameter of paintComponent() is a Graphics object, which is the superclass
     - see MyDrawingWidget class in src
+### How to get action events for different buttons when each button needs to do something different
+1) Implement TWO actionPreformed() methods 
+    - But this isn't legal!! You can't implement the same method twice, the compiler will yell
+2) Register the same listener with BOTH buttons & in actionPreformed() query event object and figure out which button actually fired it 
+    - Does work, but not very Object Oriented, hurts maintainability and extensibility
+3) Create TWO sperate ActionListener classes
+    - Doesn't work, the class won't have the proper variables they need to act on, which you could fix by giving the classes access to the GUI class, but that would get messy real quick
+4) Use an INNER CLASS!
+
+## Inner Classes
+- A class that is nested inside another
+- An inner class can use all the methods and variables of the outer class, **even the private ones**
+- An inner class instance must be tied to an outer class instance (unless an inner class is defined within a static method, but that's SUPER rare)
+    - They must be tied specifically together on the heap, so each can use each other's instance variables and methods
+~~~ java
+public class MyOuterClass {
+    private int x;
+
+    MyInnerClass inner = new myInnerClass();
+
+    public void doStuff() {
+        inner.go(); // Call a method in the inner class
+    }
+    
+    public class MyInnerClass {
+        void go() {
+            x = 42;
+        }
+    }
+}
+~~~
+- You can make an inner instance running outside of the outer class, but it's SUPER rare:
+~~~ java
+class Foo {
+    public static void main(String[] args) {
+        MyOuterClass outerObj = new MyOuterClass();
+        MyOuterClass.MyInnerClass innerObj = outerObj.new MyInnerClass();
+    }
+}
+~~~
+- Often lambdas can do the job better than inner classes, but not always
+
+## Animation with Inner Classes
+- Inner class is super useful when used as a subclass of something the outer class does not extend (when outer and inner classes are in different inheritance trees)
+- How Animation works:
+    1) Paint an object at a particular x & y coordinate
+    2) Repaint the object at a different x & y coordinate
+    3) Repreat previous step with changing x & y values for as long as the animation is supposed to continue
