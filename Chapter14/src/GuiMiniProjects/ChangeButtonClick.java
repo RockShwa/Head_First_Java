@@ -1,4 +1,6 @@
+package GuiMiniProjects;
 import javax.swing.*;
+
 import java.awt.*;
 // import java.awt.event.*; //uncomment to use inner classes
 
@@ -19,7 +21,7 @@ public class ChangeButtonClick { // Doesn't have to implement ActionListener bec
         //labelButton.addActionListener(new LabelListener()); // inner class; pass a new instance of appropriate listener class
         labelButton.addActionListener(event -> label.setText("Ouch!"));
         // Since ActionListener is a Functional Interface, a lambda can implement the interface's one and only abstract method
-
+        
         JButton colorButton = new JButton("Change Circle");
         //colorButton.addActionListener(new ColorListener()); //inner class
 

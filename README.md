@@ -5,6 +5,10 @@
 - Open up wsl terminal to run code, so you don't have to switch back and forth
 - navigate to bin folder and do java <class with main method>
 
+## Mirror bin/src folders
+- just compiles both directories in src and mirrors it in bin
+- javac -d bin src\MiniMusicPlayer\*.java src\GuiMiniProjects\*.java
+
 ## Terminal Commands:
 - run compiled binaries: navigate to bin folder, java <class with main()>
 

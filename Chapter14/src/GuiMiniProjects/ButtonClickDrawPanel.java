@@ -1,3 +1,4 @@
+package GuiMiniProjects;
 import java.util.Random;
 import java.awt.*;
 import javax.swing.*;

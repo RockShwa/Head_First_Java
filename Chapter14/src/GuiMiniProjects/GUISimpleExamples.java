@@ -1,3 +1,4 @@
+package GuiMiniProjects;
 import javax.swing.*;
 
 public class GUISimpleExamples {
