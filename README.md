@@ -8,6 +8,7 @@
 ## Mirror bin/src folders
 - just compiles both directories in src and mirrors it in bin
 - javac -d bin src\MiniMusicPlayer\*.java src\GuiMiniProjects\*.java
+- Run in bin folder with java MiniMusicPlayer/MiniMusicPlayerV1 
 
 ## Terminal Commands:
 - run compiled binaries: navigate to bin folder, java <class with main()>
