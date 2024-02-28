@@ -103,15 +103,32 @@ public class QuizCardBuilder {
 
     // Called by the SaveMenuListener's event handler
     private void saveFile(File file) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        // The Old Syle: try-catch-finally code
+        // BufferedWriter writer = null;
+        // try {
+        //     writer = new BufferedWriter(new FileWriter(file));
+        //     for (QuizCard card : cardList) {
+        //         writer.write(card.getQuestion() + "/");
+        //         writer.write(card.getAnswer() + "\n");
+        //     }
+        // } catch (IOException ex) {
+        //     System.out.println("Couldn't write the cardList out: " + ex.getMessage());
+        // } finally {
+        //     try {
+        //         writer.close();
+        //     } catch (Exception e) {
+        //         System.out.println("Couldn't close writer: " + e.getMessage());
+        //     }
+        // }
+    
+        // The Modern, try-with-resources code
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (QuizCard card : cardList) {
                 writer.write(card.getQuestion() + "/");
                 writer.write(card.getAnswer() + "\n");
             }
-            writer.close();
-        } catch (IOException ex) {
-            System.out.println("Couldn't write the cardList out: " + ex.getMessage());
+        } catch (IOException e) {
+            System.out.println("Couldn't write the cardList out: " + e.getMessage());
         }
     }
 }

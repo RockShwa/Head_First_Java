@@ -178,8 +178,26 @@ boolean isDeleted = f.delete();
         - The Files Class: class whose (static) methods do all the work you'll want to do: making new readers and writers and creating, modifying, and searching through directories and files on file systems
     - java.nio.file.attribute: lets you manipulate the metadata associated with a computer's files and directories. For example, you would use the classes in this package if you wanted to read or change a file's permission settings (more complex)
 
-### Path, Paths, and Files (messing with directories)
-- A Path object represents the location (name and path) of a file or directory on disk, but does not give access to the data in the file
+## Finally & IO Exceptions
+- "cleanup code" usually refers to closing resources we borrowed from the operating system
+- If any write() or close() methods fail, the writer will never be closed because the JVM will jump to the catch block -> leackage and not good things
+- Finally ALWAYS runs, regardless of an exception being thrown or not
+- However, the close() operation is risky too, so we would have to nest try/catch
+- The better way: Try-With-Resources
+
+## Try-With-Resources (TWR)
+- See saveFile in QuizCardBuilder for example
+- When you use try-with-resources, the compiler makes a finally block for you, you can't see it, but it's there
+- Only classes that implement Autocloseable can be used in TWR statements (most every class in I/O implements Autocloseable)
+- Writing a TWR Statement:
+1) Add a set of parentheses between "try" and "{}"
+2) Inside parentheses, declare an object whose type implements Autoclosable
+3) Use the object you declared inside the try block (just like you always did in the old way)
+- You can declare more than one I/O resource in a single TWR block (seperate with ;)
+    - If you do this, they will be closed in the order **OPPOSITE** to which they were declared
+- If you add catch or finally blocks, the system will handle multiple close() invocations gracefully
+
+
 
 
 
