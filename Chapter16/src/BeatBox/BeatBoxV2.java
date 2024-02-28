@@ -2,6 +2,7 @@ package BeatBox;
 import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import static javax.sound.midi.ShortMessage.*;
 
@@ -175,5 +176,43 @@ public class BeatBoxV2 {
             e.printStackTrace();
         }
         return event;
+    }
+
+    // Save a Beatbox pattern
+    private void writeFile() {
+        boolean[] checkboxState = new boolean[256];
+
+        for (int i = 0; i < 256; i++) {
+            JCheckBox check = checkBoxList.get(i);
+            if (check.isSelected()) {
+                checkboxState[i] = true;
+            }
+        }
+
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("Checkbox.ser"))) {
+            os.writeObject(checkboxState); //write/serialize the one boolean array
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // Restore a Beatbox pattern
+    private void readFile() {
+        boolean[] checkboxState = null;
+        try(ObjectInputStream is = new ObjectInputStream(new FileInputStream("Checkbox.ser"))) {
+            checkboxState = (boolean[]) is.readObject(); // read the one object and return the one bool array
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < 256; i++) {
+            JCheckBox check = new JCheckBox();
+            check.setSelected(checkboxState[i]);
+        }
+
+        // Stop whatever is currently playing and rebuild the sequence 
+        // using the new state of the chcekboxes in the Arraylist
+        sequencer.stop();
+        buildTrackAndStart();
     }
 }
