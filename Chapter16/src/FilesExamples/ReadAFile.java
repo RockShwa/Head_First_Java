@@ -2,7 +2,7 @@ package FilesExamples;
 import java.io.*;
 
 public class ReadAFile {
-    // read happens by reading lines in a while loop, ending the lopp when the result of a 
+    // read happens by reading lines in a while loop, ending the loop when the result of a 
     // readLine is null
     public static void main(String[] args) {
         try {

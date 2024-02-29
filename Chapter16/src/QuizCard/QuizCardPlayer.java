@@ -4,6 +4,9 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * PROBLEM: The getCard() lambda, I think it's an issue with isShowAnswer, it's never initialized
+ */
 public class QuizCardPlayer {
     // Has a File menu with a "Load" option for loading a set of cards from a text file
     private ArrayList<QuizCard> cardList;
@@ -12,7 +15,7 @@ public class QuizCardPlayer {
     private JTextArea display;
     private JFrame frame;
     private JButton nextButton;
-    private boolean isShowAnswer; // I think this just means if nextButton is displaying Show Answer
+    private boolean isShowAnswer; // I think this just means if displaying the answer
 
     public static void main(String[] args) {
         QuizCardPlayer reader = new QuizCardPlayer();

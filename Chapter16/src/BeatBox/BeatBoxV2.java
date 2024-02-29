@@ -11,6 +11,7 @@ public class BeatBoxV2 {
     private Sequencer sequencer;
     private Sequence sequence;
     private Track track;
+    private JFrame frame;
 
     // String array of all instrument names for the labels
     String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", 
@@ -25,7 +26,7 @@ public class BeatBoxV2 {
     }
 
     public void buildGUI() {
-        JFrame frame = new JFrame("Cyber BeatBox");
+        frame = new JFrame("Cyber BeatBox");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BorderLayout layout = new BorderLayout();
         JPanel background = new JPanel(layout);
@@ -51,7 +52,16 @@ public class BeatBoxV2 {
         // default tempo is 1, so this adjusts it -3% per click
         downTempo.addActionListener(e -> changeTempo(0.97f));
         buttonBox.add(downTempo);
-        
+
+        // These buttons don't make any visible change, not sure how to save/restore
+        JButton savePattern = new JButton("Serialize Pattern");
+        savePattern.addActionListener(e -> writeFile());
+        buttonBox.add(savePattern);
+
+        JButton loadFile = new JButton("Restore Pattern");
+        loadFile.addActionListener(e -> readFile());
+        buttonBox.add(loadFile);
+
         Box nameBox = new Box(BoxLayout.Y_AXIS);
         for (String instrumentName : instrumentNames) {
             JLabel instrumentLabel = new JLabel(instrumentName);
@@ -194,6 +204,10 @@ public class BeatBoxV2 {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        JFileChooser fileSave = new JFileChooser();
+        fileSave.showSaveDialog(frame);
+        saveFile(fileSave.getSelectedFile());
     }
 
     // Restore a Beatbox pattern
@@ -210,9 +224,61 @@ public class BeatBoxV2 {
             check.setSelected(checkboxState[i]);
         }
 
+        JFileChooser fileOpen = new JFileChooser();
+        fileOpen.showOpenDialog(frame);
+        loadFile(fileOpen.getSelectedFile());
+
         // Stop whatever is currently playing and rebuild the sequence 
         // using the new state of the chcekboxes in the Arraylist
         sequencer.stop();
         buildTrackAndStart();
     }
+
+    private void saveFile(File file) {
+        String stringState = "false";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (int i = 0; i < 256; i++) {
+                JCheckBox check = checkBoxList.get(i);
+                if (check.isSelected()) {
+                    stringState = "true/";
+                }
+                writer.write(stringState);
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Couldn't write the cardList out: " + e.getMessage());
+        }
+    }
+
+    private void loadFile(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                makeChecks(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Couldn't write the file out: " + e.getMessage());
+        }
+    }
+
+    // Getting an error here
+    private void makeChecks(String lineToParse) {
+        boolean[] isChecked = new boolean[256];
+        String[] result = lineToParse.split("/");
+        for (int i = 0; i < 256; i++) {
+            if (result[i].equals("true")) {
+                isChecked[i] = true;
+            } else {
+                isChecked[i] = false;
+            }
+        }
+        for (JCheckBox check : checkBoxList) {
+            for (boolean checked : isChecked) {
+                check.setSelected(checked);
+            }
+        }
+        
+    }
+
 }
