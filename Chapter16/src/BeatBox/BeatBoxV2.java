@@ -234,6 +234,13 @@ public class BeatBoxV2 {
         buildTrackAndStart();
     }
 
+    // Excersise: Trying to add to the save/restore feature by incorperating a JFileChooser so that
+    // you can name and save as many patterns as you like, and load/restore from any of previously 
+    // saved files
+
+    // What I'm trying to do here is create a BufferedWriter that makes a new file of the state
+    // of the checkboxes and writes it as a String to the file
+    // Thinking the writeFile (serializer) already does this with Checkbox.ser, how to use?
     private void saveFile(File file) {
         String stringState = "false";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -246,10 +253,12 @@ public class BeatBoxV2 {
             }
             writer.close();
         } catch (IOException e) {
-            System.out.println("Couldn't write the cardList out: " + e.getMessage());
+            System.out.println("Couldn't write the file out: " + e.getMessage());
         }
     }
 
+    // What I'm trying to do here is take the selected file and read the true/false lines, which
+    // calls makeChecks()
     private void loadFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -263,6 +272,9 @@ public class BeatBoxV2 {
     }
 
     // Getting an error here
+    // This is trying to take the Strings in the file and set the isSelected of the check to 
+    // whatever the String is. Pretty sure this is WAY clunkier than it needs to be, and I'm pretty
+    // sure that the readFile (restore) method does some of this
     private void makeChecks(String lineToParse) {
         boolean[] isChecked = new boolean[256];
         String[] result = lineToParse.split("/");
