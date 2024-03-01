@@ -199,98 +199,40 @@ public class BeatBoxV2 {
             }
         }
 
-        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("Checkbox.ser"))) {
+        JFileChooser fileSave = new JFileChooser();
+        fileSave.showSaveDialog(frame);
+        File saveFile = fileSave.getSelectedFile();
+
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(saveFile))) {
             os.writeObject(checkboxState); //write/serialize the one boolean array
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
-        JFileChooser fileSave = new JFileChooser();
-        fileSave.showSaveDialog(frame);
-        saveFile(fileSave.getSelectedFile());
     }
 
     // Restore a Beatbox pattern
     private void readFile() {
+
+        JFileChooser fileOpen = new JFileChooser();
+        fileOpen.showOpenDialog(frame);
+        File loadFile = fileOpen.getSelectedFile();
+
         boolean[] checkboxState = null;
-        try(ObjectInputStream is = new ObjectInputStream(new FileInputStream("Checkbox.ser"))) {
+        try(ObjectInputStream is = new ObjectInputStream(new FileInputStream(loadFile))) {
             checkboxState = (boolean[]) is.readObject(); // read the one object and return the one bool array
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         for (int i = 0; i < 256; i++) {
-            JCheckBox check = new JCheckBox();
+            JCheckBox check = checkBoxList.get(i);
             check.setSelected(checkboxState[i]);
         }
-
-        JFileChooser fileOpen = new JFileChooser();
-        fileOpen.showOpenDialog(frame);
-        loadFile(fileOpen.getSelectedFile());
 
         // Stop whatever is currently playing and rebuild the sequence 
         // using the new state of the chcekboxes in the Arraylist
         sequencer.stop();
         buildTrackAndStart();
     }
-
-    // Excersise: Trying to add to the save/restore feature by incorperating a JFileChooser so that
-    // you can name and save as many patterns as you like, and load/restore from any of previously 
-    // saved files
-
-    // What I'm trying to do here is create a BufferedWriter that makes a new file of the state
-    // of the checkboxes and writes it as a String to the file
-    // Thinking the writeFile (serializer) already does this with Checkbox.ser, how to use?
-    private void saveFile(File file) {
-        String stringState = "false";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for (int i = 0; i < 256; i++) {
-                JCheckBox check = checkBoxList.get(i);
-                if (check.isSelected()) {
-                    stringState = "true/";
-                }
-                writer.write(stringState);
-            }
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("Couldn't write the file out: " + e.getMessage());
-        }
-    }
-
-    // What I'm trying to do here is take the selected file and read the true/false lines, which
-    // calls makeChecks()
-    private void loadFile(File file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                makeChecks(line);
-            }
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("Couldn't write the file out: " + e.getMessage());
-        }
-    }
-
-    // Getting an error here
-    // This is trying to take the Strings in the file and set the isSelected of the check to 
-    // whatever the String is. Pretty sure this is WAY clunkier than it needs to be, and I'm pretty
-    // sure that the readFile (restore) method does some of this
-    private void makeChecks(String lineToParse) {
-        boolean[] isChecked = new boolean[256];
-        String[] result = lineToParse.split("/");
-        for (int i = 0; i < 256; i++) {
-            if (result[i].equals("true")) {
-                isChecked[i] = true;
-            } else {
-                isChecked[i] = false;
-            }
-        }
-        for (JCheckBox check : checkBoxList) {
-            for (boolean checked : isChecked) {
-                check.setSelected(checked);
-            }
-        }
-        
-    }
-
 }

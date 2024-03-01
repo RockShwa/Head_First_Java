@@ -37,7 +37,7 @@ public class QuizCardPlayer {
         scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         mainPanel.add(scroller);
 
-        JButton nextButton = new JButton("Show Question");
+        nextButton = new JButton("Show Question");
         nextButton.addActionListener(e -> nextCard());
         mainPanel.add(nextButton);
 
@@ -108,7 +108,7 @@ public class QuizCardPlayer {
 
     private void showNextCard() {
         currentCard = cardList.get(currentCardIndex);
-        currentCardIndex ++;
+        currentCardIndex++;
         display.setText(currentCard.getQuestion());
         nextButton.setText("Show Answer");
         isShowAnswer = true;

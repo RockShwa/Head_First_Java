@@ -55,3 +55,44 @@ String message = bufferedReader.readLine();
 ~~~
 
 ### Send
+- Can use BufferedWriter (when writing lots of Strings) or PrintWriter (when just one String)
+- Writing to the network with PrintWriter
+1) Make a connection to the server
+~~~ java
+SocketAddress serverAddr = new InetSocketAddress("127.0.0.1", 5000);
+SocketChannel socketChannel = SocketChannel.open(serverAddr);
+~~~
+2) Create or get a Writer from the connection
+~~~ java
+Writer writer = Channels.newWriter(socketChannel, StandardCharsets.UTF_8);
+// Should use the same Charset for reading and writing
+// writer acts as a bridge between the bytes and the characters
+~~~
+3) Make a PrintWriter and write (print) something
+~~~ java
+PrintWriter printWriter = new PrintWriter(writer);
+writer.println("message to send");
+writer.print("another message");
+~~~
+
+## Using Sockets (Alternative to Channel) 
+- java.net.Socket
+- Channels are better sometimes if working with lots of network connections or there is lots of data comming over those connections, Sockets are simpler
+- Using a Socket:
+    - You can get an InputStream or an OutputStream from a Socket, and read and write from it in a similar way to Channels
+    ~~~ java
+    // Instead of using an InetSocketAddress and opening a SocketChannel, you can create a Socket with a host and port number
+    Socket chatSocket = new Socket("127.0.0.1", 5000);
+
+    // To read from the Socket, we need to get an InputStream from the Socket
+    InputStreamReader in = new InputStreamReader(chatSocket.getInputStream());
+
+    BufferedReader reader = new BufferedReader(in);
+    String message = reader.readLine();
+
+    // To write to the socket, we need to get an OutputStream from the Socket, which we can chain to the PrintWriter
+    PrintWriter writer = new PrintWriter(chatSocket.getOutputStream());
+
+    writer.println("message to send");
+    writer.print("another message");
+    ~~~
