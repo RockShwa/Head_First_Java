@@ -9,10 +9,10 @@ public class DailyAdviceClient {
     // and reads a single line from the server application (whatever's running at port 5000)
 
     public void go() {
-        InetSocketAddress serverAddr = new InetSocketAddress("localhost", 5000);
+        InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
         // uses try-with resources to close SocketChannel when complete
-        try (SocketChannel socketChannel = SocketChannel.open(serverAddr)) {
-            Reader channelReader = Channels.newReader(socketChannel, StandardCharsets.UTF_8);
+        try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
+            Reader channelReader = Channels.newReader(socketChannel, StandardCharsets.UTF_8.name());
             BufferedReader reader = new BufferedReader(channelReader);
 
             // readLine() is the EXACT same as if you were using a BufferedReader chained to a file

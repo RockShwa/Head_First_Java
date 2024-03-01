@@ -96,3 +96,24 @@ writer.print("another message");
     writer.println("message to send");
     writer.print("another message");
     ~~~
+
+## Writing a Simple Server Application
+- ServerSocketChannel: waits for client requests (when client connects)
+- SocketChannel: use for communication with client
+1) Server application makes a ServerSocketChannel and binds it to a specific port
+~~~ java
+// This starts the server application listening for client requests coming in for port 5000
+ServerSocketChannel serverChannel = ServerSocketChannel.open();
+serverChannel.bind(new InetSocketAddress(5000));
+~~~
+2) Client makes a SocketChannel connected to server application
+~~~ java
+// Client knows IP address and port number
+SocketChannel svr = SocketChannel.open(new InetSocketAddress("190.165.1.103", 5000));
+~~~
+3) Server makes a new SocketChannel to communicate with this client
+~~~ java
+// accept() method blocks (just sits there) while it's waiting for a client connection. When a client finally connects, the method returns a SocketChannel that knows how to communicate with this client
+// the ServerSocketChannel can go back to waiting for other clients. The server has just one ServerSocketChannel, and a SocketChannel per client 
+SocketChannel clientChannel = serverChannel.accept()
+~~~
