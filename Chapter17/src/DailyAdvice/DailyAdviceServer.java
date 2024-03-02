@@ -1,3 +1,4 @@
+package DailyAdvice;
 import java.util.Random;
 import java.io.*;
 import java.net.InetSocketAddress;
