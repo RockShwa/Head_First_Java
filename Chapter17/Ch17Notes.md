@@ -118,7 +118,7 @@ SocketChannel svr = SocketChannel.open(new InetSocketAddress("190.165.1.103", 50
 SocketChannel clientChannel = serverChannel.accept()
 ~~~
 
-## Multithreading
+## Multithreading & Threads
 - Java has support for multiple threads built right into the fabric of the language (this just means you can have seperate processes going on at the same time)
     - Like how the client can scroll and write messages, and at the same time the server is reading and distributing messages
 - Threads:
@@ -152,3 +152,61 @@ Dog d = new Dog();
 - A Runnable holds the method that goes on the bottom of the new call stack: run()
 - To start a new call stack the thread needs a job, a job the thread will run once it's started
 - Runnable has only one method (run()) which means you can use a lambda
+- Making a whole new implements Runnable class is good for more complex tasks, while lambdas are good for simple, tiny jobs
+
+## ExecutorService
+- Implementations of this interface will execute jobs (Runnables)
+- Behind the scenes, the ExecutorService will create, reuse, and kill threads in order to run these jobs
+- Uses **factory methods** to create the ExecutorService instances we need
+- Static factory methods can be used instead of constructors, they return exactly the implementation of an interface that we need, we don't need to know the concrete classes or how to create them
+
+### Some Executor Methods
+- **ExecutorService newCachedThreadPool()** - Creates a thread pool that creates new threads as needed, but will reuse previously constructed threads when they are available
+- **ExecutorService newFixedThreadPool(int nThreads)** - Creates a thread pool that reuses a fixed number of threads operating off a shared unbounded queue.
+- **ScheduledExecutorService newScheduledThreadPool(int corePoolSize)** - Creates a thread pool that can schedule commands to run after a given delay, or to execute periodically
+- **ExecutorService newSingleThreadExecutor()** - Creates an Executor that uses a single worker thread operating off an unbounded queue
+- **ScehduledExecutorService newSingleThreadScheduledExecutor()** - Creates a single-threaded executor that can schedule commands to run after a given delay, or to execute periodically
+- **ExecutorService newWorkStealingPool()** - Creates a work-stealing thread pool using the number of available processors at its target parallelism level
+- All of these methods use some form of ThreadPool
+
+### ThreadPools
+- This is a collection of Thread instanced that can be used (and reused) to perform jobs
+- How many threads are in the pool, and what to do if there are more jobs to run than threads available, depends on the ExecutorService implementation
+- When you create an ExecutorService, its pool may be started with some threads to begin with, or the pool may be empty
+- You can use the pool's threads to run your job by giving the job to the ExecutorService, which then figures out if theres a free Thread to run the job (this means an ExecutorService can reuse threads)
+- As you give the ExecutorService more jobs to run, it **may** create and start new Threads to handle the jobs. It **may** store the jobs in a queue if there are more jobs than Threads
+- The ExecutorService may also terminate Threads that have been idle for some period of time, which helps minimize the amount of hardware resources (CPU, memory) your application needs
+
+#### Closing time at the Thread Pool
+- Although thread pools will take care of our individual Threads, we do need to responsiblu close the pool when we're finished so the pool can empty its job queue and shut down all its threads to free up system resources
+1) ExecutorService.shutdown() - this asks the ExecutorService if it wouldn't mind wrapping things up so everyone can go home; all Threads that are currently running jobs are allowed to finish those jobs and any new jobs waiting in the queue will also be finished off. Any new jobs are rejected
+    - You can also use awaitTermination() to sit and wait unitl your code is finished, you give it a max amount of time to wait for everything to end
+2) ExecutorService.shutdownNow() - ExecutorService will try to stop any Threads that are running, will not run any waiting jobs, and won't let anyone else into the pool; sometimes called after shutdown() to give jobs the chance finish before pulling the plug
+
+## Thread States
+- A Thread has three states (and a kind of fourth), whether you create a new Thread and pass it a Runnable or use an Executor to execute a Runnable
+1) **New** - A thread instance has been created, but not started; there is a thread object, but no thread of execution
+2) **Runnable** - Moves to this state when you start the thread. This state means that the thread is ready to run and just waiting for it to be selected for execution. At this point, there is a new call stack for this thread
+3) **Running** - This is where the Thread wants to be, and only the JVM thread scheduler can make the decision to run a thread; you can influence the JVM's decision to move a Thread from Runnable to Running, but you can not force it. In this state, a thread (and ONLY this thread) has an active call stack, and the method on top of the stack is executing
+4) **Temporarily Not Runnable** - Once a thread is runnable, it can move back and forth between runnable, running, and temporarily nor runnable. The thread scheduler can move a running thread into a blocked state for a variety of reasons. This coudl happen becuse it's sleeping (waiting for another thread to finish), waiting for data to be available on a stream, waiting for an object's lock, etc.
+
+## The Thread Scheduler
+- The Thread Schediler makes all the decision about who runs and who doesen't. It usually makes the threads take turns, but there is no gaurantee. It might let on thread run as much as it wants while the other threads starve.
+- You can not control the scheduler, so **do not base your program's correctness on the scheduler working in a particular way**
+- This means you must write platform independent Java code, your multithreaded program must work no matter how the thread scheduler behaves
+- Multithread programs are not deterministic, they don't run the same way every thime; even if the new thread is tiny, if it only has one line of code to run (like a lambda), it can still be interrupted by the thread scheduler
+
+## Threads & Sleep
+- One way to help your threads take turns is to put them to sleep periodically -> call static sleep(#ofMillisecs)
+- This knocks the thread out of running state into runnable for the specificed milliseconds
+- sleep() throws an InterupptedException, a checked exception, so all calls to sleep must be wrapped in try/catch (or declared)
+- A thread will not wake up before timer, but it could wake up after the timer, becuase it's at the mercy of the thread scheduler
+- Can use TimeUnit.MINUTES.sleep(2) instead of Thread.sleep(120000) -> both need try/catch
+- Downsides of Sleep:
+1) The program has to wait for at least that amount of time, which slows down the application a LOT if you use a lot of sleeps. And since when the thread wakes up it's at the mercy of the thread scheduler, our program will probably be hanging around for 2 seconds or more doing nothing
+2) How do you know the other job will finish in that time?
+- To address these downsides, to coordinate events happening on multiple threads, one thread may need to wait for a specific signal from anotehr before it can continue
+
+### CountDownLatch, Barriers, CyclicBarrier and Phaser
+- You can make threads count down when significant events have happened. A thread (or threads) can wait for all these events to complete before continuing
+- CountDownLatch sets a number to count down from, then any thread can tell the latch to count down when a relevant event has happened
