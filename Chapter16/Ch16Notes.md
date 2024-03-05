@@ -1,7 +1,5 @@
 # Serialization and File I/O - Saving Obejcts (and Text)
 
-// TODO: FIX THE BEATBOX AND FIGURE OUT THE JFILECHOOSER
-
 - Objects can be flattened and inflated; Objects have state and behavior
     - Behavior lives in the class, but state lives within each individual object
 - I/O: input/output
