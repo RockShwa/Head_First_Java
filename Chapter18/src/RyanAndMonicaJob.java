@@ -21,7 +21,7 @@ class RyanAndMonicaJob implements Runnable{
         // synchronized (account) {
             if (account.getBalance() >= amount) {
                 System.out.println(name + " is about to spend");
-                account.spend(amount);
+                account.spend(name, amount);
                 System.out.println(name + " finishes spending");
             } else {
                 System.out.println("Sorry, not enough for " + name);
