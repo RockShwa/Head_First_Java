@@ -6,6 +6,7 @@ import java.util.concurrent.*;
 
 public class BeatBoxServer {
     final List<ObjectOutputStream> clientOutputStreams = new ArrayList<>();
+    private ServerSocket serverSock;
 
     public static void main(String[] args) {
         new BeatBoxServer().go();
@@ -13,7 +14,7 @@ public class BeatBoxServer {
 
     public void go() {
         try {
-            ServerSocket serverSock = new ServerSocket(4242);
+            serverSock = new ServerSocket(4242);
             ExecutorService threadPool = Executors.newCachedThreadPool();
 
             while (!serverSock.isClosed()) {
@@ -24,7 +25,6 @@ public class BeatBoxServer {
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 threadPool.execute(clientHandler);
                 System.out.println("Got a Connection!");
-                serverSock.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

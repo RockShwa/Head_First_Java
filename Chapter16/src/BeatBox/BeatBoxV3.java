@@ -10,8 +10,6 @@ import java.util.concurrent.*;
 import static javax.sound.midi.ShortMessage.*;
 
 public class BeatBoxV3 {
-    // TODO: Pop up a dialog box when you select a pattern that asks if you want to save your current pattern 
-    // TODO: Random pattern button (JUnit to test?)
     private JList<String> incomingList;
     private JTextArea userMessage;
     private ArrayList<JCheckBox> checkBoxList; // store all checkboxes in an ArrayList
@@ -24,6 +22,7 @@ public class BeatBoxV3 {
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private Socket socket;
 
     private Sequencer sequencer;
     private Sequence sequence;
@@ -50,12 +49,11 @@ public class BeatBoxV3 {
         userName = name;
         // open up connection to server (Using Sockets because they work better with I/O Streams)
         try {
-            Socket socket = new Socket("127.0.0.1", 4242);
+            socket = new Socket("127.0.0.1", 4242);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(new RemoteReader()); 
-            socket.close(); // not sure where to put this
         } catch (Exception ex) {
             System.out.println("Couldn't connect-you'll have to play alone.");
         }
@@ -80,6 +78,10 @@ public class BeatBoxV3 {
         stop.addActionListener(e -> sequencer.stop());
         buttonBox.add(stop);
 
+        JButton clear = new JButton("Clear All");
+        clear.addActionListener(e -> clearAll());
+        buttonBox.add(clear);
+
         JButton upTempo = new JButton("Tempo Up");
         // default tempo is 1, so this adjusts it +3% per click
         upTempo.addActionListener(e -> changeTempo(1.03f));
@@ -89,6 +91,10 @@ public class BeatBoxV3 {
         // default tempo is 1, so this adjusts it -3% per click
         downTempo.addActionListener(e -> changeTempo(0.97f));
         buttonBox.add(downTempo);
+
+        JButton randomPattern = new JButton("Random Pattern");
+        randomPattern.addActionListener(e -> generateRandomPattern());
+        buttonBox.add(randomPattern);
 
         // These buttons don't make any visible change, not sure how to save/restore
         JButton savePattern = new JButton("Serialize Pattern");
@@ -233,10 +239,19 @@ public class BeatBoxV3 {
         userMessage.setText("");
     }
 
+    private void saveDialogBox() {
+        String[] saveOptions = {"Save", "Don't Save"};
+        int selection = JOptionPane.showOptionDialog(null, null, "Do you want to save your current pattern?", 0, 2, null, saveOptions, saveOptions[0]);
+        if (selection == 0) {
+            writeFile();
+        }
+    }
+
     // This tells us when the user made a selection from the list of messages. We immediately load
     // the associated pattern (in the HashMap otherSeqMap) and start playing it
     public class MyListSelectionListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent lse) {
+            saveDialogBox();
             String selected = incomingList.getSelectedValue();
             if (selected != null) {
                 // now go to the map, and change the sequence
@@ -257,6 +272,22 @@ public class BeatBoxV3 {
         }
     }
 
+    private void generateRandomPattern() {
+        for (JCheckBox check : checkBoxList) {
+            check.setSelected(false);
+        }
+        for (int i = 0; i < 15; i++) {
+            int r = (int) (Math.random() * 256);
+            JCheckBox check = checkBoxList.get(r);
+            check.setSelected(true);
+        }
+    }
+
+    private void clearAll() {
+        for (JCheckBox check : checkBoxList) {
+            check.setSelected(false);
+        }
+    }
     // This makes events for one instument at a tiem, for all 16 beats. So it might get an int[]
     // for the Bass drum, and each index in the array will hold either the key of that instrument 
     // or a zero. If it's a zero, the instrument is not supposed to play at that beat. Otherwise, 
