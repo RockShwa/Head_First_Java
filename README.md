@@ -1,4 +1,9 @@
-# Notes for Using the Terminal and using Git:
+# Head First Java Notes
+
+## Project Description
+This repository stores all of my notes and projects that I created when I read through the book Head First Java by Bert Bates and Kathy Sierra.
+
+## Notes for Using the Terminal and using Git:
 
 - Make sure to save changes with ctrl s
 - Compile with javac -d bin ./src/*.java (do EVERY time you make a change)
